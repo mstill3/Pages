@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Grocery Store</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {font-family: Georgia, serif;
+background-image: url("GroceryStore2.jpg")
+}
+
+#wrapper { background-color: #000000; 
+           color: #33FF00;
+           width: 100%;
+		   margin: auto;
+           min-width: 450px;
+		   max-width: 1020px;
+} 
+header { background-color: #33FF00;
+         background-image: url("GroceryStore.jpg");
+		background-repeat: no-repeat;
+       color: #ffffff; 
+		padding: 1px;
+		border: 10px solid black;
+}
+header h1 { padding-left: 80px;
+			font-size: 30px;
+ }
+header h2 { margin-top: 0; 
+            padding-right: 15px;
+		    font-style: italic;
+            text-align: right; 
+			color: #ffffff;
+			}
+
+nav { float: left;
+	  width: 125px;
+	  letter-spacing:0.1em;
+	  font-weight: bold;
+} 
+
+nav ul { list-style-type: none; 
+         margin: 0;
+         padding: 0;
+}
+nav li { border-bottom: 1px solid #ffffff;
+}
+nav a { text-decoration: none; 
+        display: block;
+		padding: 15px;
+}
+nav a:link { color: #ffffff; }
+nav a:visited { color: #eaeaea; }
+nav a:hover {  color: #33FF00;
+               background-color: #FFFFFF;
+}
+#main{ background-color: #ffffff;
+           color: #000000;
+		   padding: 50px 40px;
+	       overflow: auto; 
+} 
+
+h2 { color: #808080; 
+     font-family: "Times New Roman", Times, serif;
+}
+
+footer {font-size:70%;
+         text-align: center;
+         padding: 10px;
+         background-color: #000000;
+		 clear: both;
+		 
+}
+
+header, nav, main, footer, figure, figcaption { display: block; }
+
+</style>
+<link rel="shortcut icon" href="favicon.jpg">
+</head>
+
+<body>
+<div id="wrapper">  
+
+  <header>
+      <h1>Grocery Store</h1>
+      <h2>Team Alpha</h2>
+  </header>  
+  
+  <nav>
+    <ul>
+	 <li><a href="Project_COSC.html">Home</a></li>
+     <li><a href="Project_COSC1.html">Catalog</a></li>
+	    <li><a href="Project_COSC2.html">Search</a></li>
+	</ul> 
+   </nav>
+   
+<div id="main"> 
+<h2>By Name</h2>
+
+	<!---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+	<script src="goose.js"></script>
+	
+	<button type="button" onclick="vSortItems(true)">
+		Sort Items Ascending
+	</button>
+	
+	<button type="button" onclick="vSortItems(false)">
+		Sort Items Descending
+	</button>
+	
+	<!--
+	<form>
+	<input type="radio" name="browser" onclick="check(this.value)" value="name">By Name
+	<input type="radio" name="browser" onclick="check(this.value)" value="price">By Price
+	<input type="radio" name="browser" onclick="check(this.value)" value="isle">By Isle
+	<input type="radio" name="browser" onclick="check(this.value)" value="num">By Quantity
+	</form>
+	-->
+	
+	<p id="txtSortOutput"></p>
+<!---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+
+
+		
+  </div> 
+   <footer><font color="white">Copyright &copy; 2015</font>
+   <p id="demo"></p>
+
+<script>
+d = new Date();
+document.getElementById("demo").innerHTML = d;
+</script>
+   </footer>
+  </div> 
+</body>
+</html>
+
+

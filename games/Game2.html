@@ -1,0 +1,221 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<style>
+			canvas
+			{
+				//background
+				border:1px solid #212121;
+				background-color: #E5E4E2;
+			}
+		</style>
+	</head>
+	<body onload="startGame()">
+
+		<script>
+			var myGamePiece;
+
+			function startGame()
+			{
+				myGamePiece = new component(40, 40, "#568203", 225, 225);
+				myGameArea.start();
+			}
+
+			var myGameArea =
+			{
+				canvas : document.createElement("canvas"),
+				start : function()
+				{
+					this.canvas.width = window.innerWidth - 35;
+					this.canvas.height = window.innerHeight - 20;
+					this.context = this.canvas.getContext("2d");
+					document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+					this.frameNo = 0;
+					this.interval = setInterval(updateGameArea, 20);
+					window.addEventListener('keydown', function (e)
+					{
+						e.preventDefault();
+						myGameArea.keys = (myGameArea.keys || []);
+						myGameArea.keys[e.keyCode] = (e.type == "keydown");
+					})
+					window.addEventListener('keyup', function (e)
+					{
+						myGameArea.keys[e.keyCode] = (e.type == "keydown");
+					})
+				},
+				stop : function()
+				{
+					clearInterval(this.interval);
+				},    
+				clear : function()
+				{
+					this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+				}
+			}
+			
+			var speedX = 0;
+			
+			function component(width, height, color, x, y, type)
+			{
+
+				this.type = type;
+				this.width = width;
+				this.height = height;
+				this.speed = 0;
+				this.angle = 0;
+				this.moveAngle = 0;
+				this.x = x;
+				this.y = y;    
+				this.speedX = 0;
+				this.speedY = 0;    
+				this.gravity = 0.05;
+				this.gravitySpeed = 0;
+				this.sideSpeed = 0;
+				this.bounce = 0.6;
+	
+				this.update = function()
+				{
+					ctx = myGameArea.context;
+					
+					//ground
+					ctx.fillStyle = "#49796B";
+					ctx.fillRect(2, myGameArea.canvas.height - this.height + 20, window.innerWidth - 40, 17);
+					
+					ctx.save();
+					ctx.translate(this.x, this.y);
+					ctx.rotate(this.angle);
+					
+					//frog
+					ctx.fillStyle = color;
+					ctx.fillRect(this.width / -2, this.height / -2, this.width, this.height);
+					
+					//pointer
+					ctx.fillStyle = "#8F9779";
+					ctx.fillRect(this.width / -2 + this.width / 2 - 1, this.height / -2 - 10, 2, 10);
+					
+					ctx.restore();    
+					
+					//display
+					ctx.fillStyle = "black";
+					ctx.font = "10px Arial";
+					ctx.fillText("X: " + this.x, 5, 10);
+					ctx.fillText("Y: " + this.y, 5, 20);
+					ctx.fillText("Angle: " + this.angle, 5, 40);
+					ctx.fillText("Version: Controls 0.2 ", 5, 90);
+					
+					if(this.sideSpeed > 90)
+					this.sideSpeed -= 90;
+					
+					ctx.fillText("X Speed: " + this.sideSpeed, 5, 50);
+					ctx.fillText("Y Speed: " + this.gravitySpeed, 5, 60);
+
+				}
+				
+				this.newPos = function()
+				{
+				
+				    this.gravitySpeed += this.gravity;
+					this.x += this.speedX;
+					this.y += this.speedY + this.gravitySpeed;
+					
+					this.hitTop();	
+					this.hitLeft();
+					this.hitRight();
+					this.hitBottom();	
+				
+					this.angle += this.moveAngle * Math.PI / 180;
+					this.x += this.speed * Math.sin(this.angle);
+					this.y -= this.speed * Math.cos(this.angle);
+					this.update();
+					
+				}
+				
+				this.hitTop = function()
+				 {
+					this.bounce = 0.9;
+					if (this.y < this.height - 20) {
+						this.y = this.height - 14; // - amount - 1
+						this.gravitySpeed = -(this.gravitySpeed / this.bounce); //down
+					}
+				}
+				
+				
+				this.breakLeft = function()
+				{
+					if (this.x < this.width + 20) {
+						this.x = this.width + 26; // + amount + 1
+						this.gravitySpeed = -(this.gravitySpeed * this.bounce);
+					}
+				}
+				
+				this.hitLeft = function()
+				 {
+				 
+					if (this.x < this.width + 20) {
+						this.x = this.width + 26; // + amount + 1
+					}
+				}
+				
+				this.hitRight = function()
+				 {
+					this.bounce = 0.9;
+					if (this.y < this.height - 20) {
+						this.y = this.height - 20;
+						this.gravitySpeed = -(this.gravitySpeed * this.bounce);
+					}
+				}
+				
+				 this.hitBottom = function()
+				 {
+					var rockbottom = myGameArea.canvas.height - this.height;
+					if (this.y > rockbottom) {
+						this.y = rockbottom;
+						this.gravitySpeed = -(this.gravitySpeed * this.bounce); //up
+					}
+				}
+				
+			}
+
+			function updateGameArea()
+			{
+				myGameArea.clear();
+				myGamePiece.moveAngle = 0;
+				myGamePiece.speed = 0;
+				amount = 5;
+				
+				
+				if (myGameArea.keys && myGameArea.keys[37]){ //left arrow
+					myGamePiece.moveAngle = -amount;
+					myGamePiece.sideSpeed += -amount;
+					}
+				else if (myGameArea.keys && myGameArea.keys[65]){ //left a
+					myGamePiece.moveAngle = -amount;
+					myGamePiece.sideSpeed += -amount;
+					}
+				else if (myGameArea.keys && myGameArea.keys[39]){ //right arrow
+					myGamePiece.moveAngle = amount; 
+					myGamePiece.sideSpeed += amount;
+					}
+				else if (myGameArea.keys && myGameArea.keys[68]){ //right d
+					myGamePiece.moveAngle = amount; 
+					myGamePiece.sideSpeed += amount;
+					}
+				else if (myGameArea.keys && myGameArea.keys[38]){ //up arrow
+					myGamePiece.speed = amount; 
+					myGamePiece.sideSpeed += amount;
+					}
+				else if (myGameArea.keys && myGameArea.keys[87]) //up w
+					myGamePiece.speed = amount; 
+				else if (myGameArea.keys && myGameArea.keys[40]) //down arrow
+					myGamePiece.speed = -amount; 
+				else if (myGameArea.keys && myGameArea.keys[83]) //down s
+					myGamePiece.speed = -amount; 
+				
+				myGamePiece.newPos();
+				myGamePiece.update();
+			}
+		</script>
+
+	</body>
+</html>
